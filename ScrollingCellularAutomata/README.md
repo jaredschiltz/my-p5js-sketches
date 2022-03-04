@@ -1,0 +1,1 @@
+# Press the space bar to randomly generate an new rule and new color scheme. Have fun! 🤪
