@@ -60,12 +60,16 @@ let click_sound_player;
 let selector_manager;
 
 function preload() {
-  card_texture = loadImage("card-texture.png");
+  card_texture = loadImage("./Assets/Images/card-texture.png");
   heavy_font = loadFont("./Assets/Fonts/SFMOMADisplay-Heavy.ttf");
   noun_strings = loadStrings("./Assets/Word-Lists/nounlist.txt");
   adjective_strings = loadStrings("./Assets/Word-Lists/adjectivelist.txt");
-  flip_sound_player = new Tone.Player("flip-card.mp3").toDestination();
-  click_sound_player = new Tone.Player("button-click.mp3").toDestination();
+  flip_sound_player = new Tone.Player(
+    "./Assets/Sounds/flip-card.mp3"
+  ).toDestination();
+  click_sound_player = new Tone.Player(
+    "./Assets/Sounds/button-click.mp3"
+  ).toDestination();
 }
 
 function setup() {
