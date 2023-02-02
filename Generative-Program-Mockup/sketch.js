@@ -1,53 +1,76 @@
 let card_texture;
-let drop_shadow;
 let heavy_font;
 
-let random_color;
-let random_color_alpha = 170;
+const APP_WIDTH = 1152;
+const APP_HEIGHT = 648;
+// Taken from picotron color palette
+// https://lospec.com/palette-list/picotron-wip-v3
+const COLOR_PALETTE = [
+  "#000000",
+  "#1d2b53",
+  "#7e2553",
+  "#008751",
+  "#ab5236",
+  "#5f574f",
+  "#c2c3c7",
+  "#fff1e8",
+  "#ff004d",
+  "#ffa300",
+  "#ffec27",
+  "#00e436",
+  "#29adff",
+  "#83769c",
+  "#ff77a8",
+  "#ffccaa",
+  "#672d8a",
+  "#0a62be",
+  "#422136",
+  "#125359",
+  "#742f29",
+  "#d48e6f",
+  "#a28879",
+  "#fff57d",
+  "#be1226",
+  "#ff6c24",
+  "#a8f12e",
+  "#00b251",
+  "#83ebf5",
+  "#bd9adf",
+  "#b937b8",
+  "#ffacc5",
+];
 
-const card_x = 269;
-const card_y = 18;
-const card_width = 853;
-const card_height = 594;
+const CARD_DIMENSIONS = {
+  CARD_X: 257,
+  CARD_Y: 18,
+  CARD_WIDTH: 852,
+  CARD_HEIGHT: 615,
+};
 
 const border_height_percentage = 0.25; // This is how thick border strip should be w.r.t. to card height
-const top_border_x = card_x;
-const top_border_y = card_y;
-const top_border_width = card_width;
-const top_border_height = card_height * border_height_percentage;
-const bottom_border_x = card_x;
-const bottom_border_y = card_y + top_border_height * 3.0;
-const bottom_border_width = card_width;
-const bottom_border_height = top_border_height;
+let border1;
 
 let noun_strings;
 let adjective_strings;
 let title;
 
-let flip_sound;
-let click_sound;
+let flip_sound_player;
+let click_sound_player;
 
 let selector_manager;
 
 function preload() {
   card_texture = loadImage("card-texture.png");
-  drop_shadow = loadImage("drop-shadow.png");
-  heavy_font = loadFont("SFMOMADisplay-Heavy.ttf");
-  noun_strings = loadStrings("nounlist.txt");
-  adjective_strings = loadStrings("adjectivelist.txt");
-  flip_sound = loadSound("flip-card.mp3");
-  click_sound = loadSound("button-click.mp3");
+  heavy_font = loadFont("./Assets/Fonts/SFMOMADisplay-Heavy.ttf");
+  noun_strings = loadStrings("./Assets/Word-Lists/nounlist.txt");
+  adjective_strings = loadStrings("./Assets/Word-Lists/adjectivelist.txt");
+  flip_sound_player = new Tone.Player("flip-card.mp3").toDestination();
+  click_sound_player = new Tone.Player("button-click.mp3").toDestination();
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
   title = get_title();
-  random_color = color(
-    random(0, 255),
-    random(0, 255),
-    random(0, 255),
-    random_color_alpha
-  );
 
   let selector_max_width = 220;
   let selector_height = 50;
@@ -58,8 +81,8 @@ function setup() {
   let num_selections = 5;
 
   selector_manager = new SelectorManager(
-    card_y,
-    card_height,
+    CARD_DIMENSIONS.CARD_Y,
+    CARD_DIMENSIONS.CARD_HEIGHT,
     selector_max_width, // Button width will go from 0 to max_width
     selector_height,
     selector_color,
@@ -69,38 +92,94 @@ function setup() {
     selector_radio_button_color,
     num_selections
   );
+  /*
+  // create a new midi file
+  let midi = new Midi();
+  // add a track
+  const track = midi.addTrack();
+  track
+    .addNote({
+      midi: 60,
+      time: 0,
+      duration: 0.2,
+    })
+    .addNote({
+      name: "C5",
+      time: 0.3,
+      duration: 0.1,
+    })
+    .addCC({
+      number: 64,
+      value: 127,
+      time: 0.2,
+    });
+  let midi_bytes = midi.toArray();
+  let midi_hex = bufferToHex(midi_bytes); // This makes ASCII hex string
+  let binary_string = "";
+  for (let i = 0; i < midi_hex.length; i += 2) {
+    let hex = midi_hex[i] + midi_hex[i + 1];
+
+    let charCode = parseInt(hex, 16);
+    binary_string += String.fromCharCode(charCode);
+  }
+
+  let my_uint8_array = Uint8Array.from(binary_string, (c) => c.charCodeAt(0));
+  let blob = new Blob([my_uint8_array], { type: "application/octet-stream" });
+
+  downloadFile(blob, "shit.mid");
+  */
+  border1 = new RectangleBorder(
+    CARD_DIMENSIONS,
+    border_height_percentage,
+    COLOR_PALETTE
+  );
 }
 
 function draw() {
   background(20);
-  image(card_texture, card_x, card_y, card_width, card_height);
-
-  noStroke();
-  fill(random_color);
+  /*
+  fill(0, 255, 0);
   rectMode(CORNER);
-  rect(top_border_x, top_border_y, top_border_width, top_border_height);
-  rect(
-    bottom_border_x,
-    bottom_border_y,
-    bottom_border_width,
-    bottom_border_height
+  rect(0, 0, APP_WIDTH, APP_HEIGHT);
+  */
+  image(
+    card_texture,
+    CARD_DIMENSIONS.CARD_X,
+    CARD_DIMENSIONS.CARD_Y,
+    CARD_DIMENSIONS.CARD_WIDTH,
+    CARD_DIMENSIONS.CARD_HEIGHT
   );
 
-  draw_frame(color(255, 255, 255));
-  noStroke();
-  image(drop_shadow, card_x, card_y, card_width, card_height + 18);
+  border1.draw();
+  draw_frame(color(215, 215, 215));
 
+  // Draw Text
   fill(0, 0, 0, 255);
   textFont(heavy_font);
   textSize(50);
-  rectMode(CENTER);
   textAlign(CENTER, CENTER);
-  text(title, card_x + card_width / 2, card_y + card_height / 2 - 10);
+  text(
+    title,
+    CARD_DIMENSIONS.CARD_X + CARD_DIMENSIONS.CARD_WIDTH / 2,
+    CARD_DIMENSIONS.CARD_Y + CARD_DIMENSIONS.CARD_HEIGHT / 2 - 10 // Have to add this offset to get text to center
+  );
 
   let selector_array = selector_manager.get_selector_array();
   for (let s of selector_array) {
     s.draw();
   }
+
+  rectMode(CENTER);
+  noFill();
+  stroke(0, 0, 0);
+  strokeWeight(8);
+  rect(
+    CARD_DIMENSIONS.CARD_X + CARD_DIMENSIONS.CARD_WIDTH / 2,
+    CARD_DIMENSIONS.CARD_Y + CARD_DIMENSIONS.CARD_HEIGHT / 2,
+    CARD_DIMENSIONS.CARD_WIDTH,
+    CARD_DIMENSIONS.CARD_HEIGHT,
+    40
+  );
 }
 
 function windowResized() {
@@ -108,14 +187,13 @@ function windowResized() {
 }
 
 function mouseClicked() {
-  if (mouseX > 269) {
+  if (mouseX > CARD_DIMENSIONS.CARD_X) {
     title = get_title();
-    flip_sound.play();
-    random_color = color(
-      random(0, 255),
-      random(0, 255),
-      random(0, 255),
-      random_color_alpha
+    flip_sound_player.start();
+    border1 = new RectangleBorder(
+      CARD_DIMENSIONS,
+      border_height_percentage,
+      COLOR_PALETTE
     );
   }
   let selector_array = selector_manager.get_selector_array();
@@ -123,7 +201,7 @@ function mouseClicked() {
     if (
       selector_array[i].get_mouse_over(createVector(mouseX, mouseY)) == true
     ) {
-      click_sound.play();
+      click_sound_player.start();
       selector_manager.set_current_selection(i);
     }
   }
@@ -144,17 +222,12 @@ function mouseMoved() {
   if (detected_mouse_in_selector == false) {
     selector_manager.clear_next_selection();
   }
-
-  /*
-  for (let i = 0; i < num_selections; i++) {
-    selector_array[i].get_mouse_over(createVector(mouseX, mouseY));
-  }
-  */
 }
 
 function get_title() {
   let adjective = get_adjective();
   let noun = get_noun();
+  // Capitalize the first letter of every word
   let title =
     adjective.charAt(0).toUpperCase() +
     adjective.slice(1) +
@@ -174,37 +247,71 @@ function get_adjective() {
 
 function draw_frame(frame_color) {
   push();
-  scale(6, 6);
   strokeJoin(ROUND);
+  // Have to scale SVG for because p5js svg converter
+  // webapp wants to use different window size?
+  scale(APP_WIDTH / 1280, APP_HEIGHT / 720);
   stroke("rgba(0,0,0,0)");
   strokeCap(PROJECT);
   strokeJoin(MITER);
   fill(frame_color);
   beginShape();
-  vertex(87.48, 108);
-  vertex(0, 108);
+  vertex(351.335, 720);
+  vertex(0, 720);
   vertex(0, 0);
-  vertex(87.48, 0);
-  vertex(87.48, 3.065);
-  vertex(50.959, 3.065);
-  bezierVertex(47.617, 3.065, 44.904, 5.778, 44.904, 9.12);
-  vertex(44.904, 98.88);
-  bezierVertex(44.904, 102.222, 47.617, 104.935, 50.959, 104.935);
-  vertex(87.48, 104.935);
-  vertex(87.48, 108);
+  vertex(351.335, 0);
+  vertex(351.335, 20.433);
+  vertex(325.729, 20.433);
+  bezierVertex(303.449, 20.433, 285.362, 38.521, 285.362, 60.8);
+  vertex(285.362, 659.2);
+  bezierVertex(285.362, 681.479, 303.449, 699.567, 325.729, 699.567);
+  vertex(351.335, 699.567);
+  vertex(351.335, 720);
   endShape();
   beginShape();
-  vertex(87.48, 0);
-  vertex(192, 0);
-  vertex(192, 108);
-  vertex(87.48, 108);
-  vertex(87.48, 104.935);
-  vertex(180.821, 104.935);
-  bezierVertex(184.162, 104.935, 186.876, 102.222, 186.876, 98.88);
-  vertex(186.876, 9.12);
-  bezierVertex(186.876, 5.778, 184.162, 3.065, 180.821, 3.065);
-  vertex(87.48, 3.065);
-  vertex(87.48, 0);
+  vertex(286.724, 0);
+  vertex(1280, 0);
+  vertex(1280, 720);
+  vertex(286.72400000000005, 720);
+  vertex(286.72400000000005, 669.629);
+  bezierVertex(
+    291.326,
+    686.86,
+    307.05500000000006,
+    699.567,
+    325.72900000000004,
+    699.567
+  );
+  vertex(1191.47, 699.567);
+  bezierVertex(1213.749, 699.567, 1231.837, 681.479, 1231.837, 659.2);
+  vertex(1231.837, 60.80000000000007);
+  bezierVertex(
+    1231.837,
+    38.52100000000007,
+    1213.749,
+    20.43300000000007,
+    1191.47,
+    20.43300000000007
+  );
+  vertex(325.72900000000004, 20.43300000000007);
+  bezierVertex(
+    307.05500000000006,
+    20.43300000000007,
+    291.326,
+    33.14000000000007,
+    286.72400000000005,
+    50.371000000000066
+  );
+  vertex(286.72400000000005, 6.394884621840902e-14);
   endShape();
   pop();
+}
+
+function bufferToHex(buffer) {
+  var s = "",
+    h = "0123456789ABCDEF";
+  new Uint8Array(buffer).forEach((v) => {
+    s += h[v >> 4] + h[v & 15];
+  });
+  return s;
 }
