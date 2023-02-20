@@ -1,3 +1,4 @@
+"use strict";
 let card_texture;
 let heavy_font;
 
@@ -76,26 +77,19 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   title = get_title();
 
-  let selector_max_width = 220;
-  let selector_height = 50;
-  let selector_color = (0, 0, 0);
-  let selector_font_color_selected = color(255, 255, 255);
-  let selector_font_color_unselected = color(50, 50, 50);
-  let selector_radio_button_color = color(255, 255, 255);
-  let num_selections = 5;
-
   selector_manager = new SelectorManager(
-    CARD_DIMENSIONS.CARD_Y,
-    CARD_DIMENSIONS.CARD_HEIGHT,
-    selector_max_width, // Button width will go from 0 to max_width
-    selector_height,
-    selector_color,
+    0, // selector_box_x,
+    CARD_DIMENSIONS.CARD_Y, // selector_box_y
+    CARD_DIMENSIONS.CARD_X, // selector_box_width
+    CARD_DIMENSIONS.CARD_HEIGHT, // selector_box_height
     heavy_font,
-    selector_font_color_selected,
-    selector_font_color_unselected,
-    selector_radio_button_color,
-    num_selections
+    color(0, 0, 0), //selector_color
+    color(255, 255, 255), // selector_font_color_selected
+    color(50, 50, 50), //selector_font_color_unselected
+    color(255, 255, 255), //selector_radio_button_color
+    5 // num_selections
   );
+
   /*
   // create a new midi file
   let midi = new Midi();
@@ -141,11 +135,7 @@ function setup() {
 
 function draw() {
   background(20);
-  /*
-  fill(0, 255, 0);
-  rectMode(CORNER);
-  rect(0, 0, APP_WIDTH, APP_HEIGHT);
-  */
+
   image(
     card_texture,
     CARD_DIMENSIONS.CARD_X,
@@ -155,9 +145,11 @@ function draw() {
   );
 
   border1.draw();
-  draw_frame(color(215, 215, 215));
+  // Draw the card frame which surrounds the card
+  draw_card_frame(color(215, 215, 215));
 
   // Draw Text
+  noStroke();
   fill(0, 0, 0, 255);
   textFont(heavy_font);
   textSize(50);
@@ -168,22 +160,16 @@ function draw() {
     CARD_DIMENSIONS.CARD_Y + CARD_DIMENSIONS.CARD_HEIGHT / 2 - 10 // Have to add this offset to get text to center
   );
 
+  // Draw Selector
+  selector_manager.draw();
+  /*
   let selector_array = selector_manager.get_selector_array();
   for (let s of selector_array) {
     s.draw();
   }
+  */
 
-  rectMode(CENTER);
-  noFill();
-  stroke(0, 0, 0);
-  strokeWeight(8);
-  rect(
-    CARD_DIMENSIONS.CARD_X + CARD_DIMENSIONS.CARD_WIDTH / 2,
-    CARD_DIMENSIONS.CARD_Y + CARD_DIMENSIONS.CARD_HEIGHT / 2,
-    CARD_DIMENSIONS.CARD_WIDTH,
-    CARD_DIMENSIONS.CARD_HEIGHT,
-    40
-  );
+  draw_card_border();
 }
 
 function windowResized() {
@@ -200,6 +186,7 @@ function mouseClicked() {
       COLOR_PALETTE
     );
   }
+  /*
   let selector_array = selector_manager.get_selector_array();
   for (let i = 0; i < 5; i++) {
     if (
@@ -209,9 +196,11 @@ function mouseClicked() {
       selector_manager.set_current_selection(i);
     }
   }
+  */
 }
 
 function mouseMoved() {
+  /*
   let selector_array = selector_manager.get_selector_array();
   let detected_mouse_in_selector = false;
   for (let i = 0; i < 5; i++) {
@@ -226,6 +215,21 @@ function mouseMoved() {
   if (detected_mouse_in_selector == false) {
     selector_manager.clear_next_selection();
   }
+  */
+}
+
+function draw_card_border() {
+  rectMode(CENTER);
+  noFill();
+  stroke(0, 0, 0);
+  strokeWeight(8);
+  rect(
+    CARD_DIMENSIONS.CARD_X + CARD_DIMENSIONS.CARD_WIDTH / 2,
+    CARD_DIMENSIONS.CARD_Y + CARD_DIMENSIONS.CARD_HEIGHT / 2,
+    CARD_DIMENSIONS.CARD_WIDTH,
+    CARD_DIMENSIONS.CARD_HEIGHT,
+    40
+  );
 }
 
 function get_title() {
@@ -249,7 +253,7 @@ function get_adjective() {
   return adjective_strings[floor(random(0, adjective_strings.length))];
 }
 
-function draw_frame(frame_color) {
+function draw_card_frame(frame_color) {
   push();
   strokeJoin(ROUND);
   // Have to scale SVG for because p5js svg converter
@@ -311,6 +315,7 @@ function draw_frame(frame_color) {
   pop();
 }
 
+// This is used by MIDI writer
 function bufferToHex(buffer) {
   var s = "",
     h = "0123456789ABCDEF";

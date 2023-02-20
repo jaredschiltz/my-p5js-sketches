@@ -1,24 +1,38 @@
+"use strict";
 class SelectorManager {
   constructor(
-    card_y,
-    card_height,
-    selector_max_width, // Button width will go from 0 to max_width
-    selector_height,
-    selector_color,
+    selector_box_x,
+    selector_box_y,
+    selector_box_width,
+    selector_box_height,
     font_type,
+    selector_color,
     selector_font_color_selected,
     selector_font_color_unselected,
     selector_radio_button_color,
     num_selections
   ) {
+    this.selector_box_x = selector_box_x;
+    this.selector_box_y = selector_box_y;
+    this.selector_box_width = selector_box_width;
+    this.selector_box_height = selector_box_height;
+    this.font_type = font_type;
+    this.selector_color = selector_color;
+    this.selector_font_color_selected = selector_font_color_selected;
+    this.selector_font_color_unselected = selector_font_color_unselected;
+    this.selector_radio_button_color = selector_radio_button_color;
+    this.num_selections = num_selections;
+
+    /*
     this.selector_array = new Array(num_selections);
     this.current_selection = 0;
-    let selector_offset = (card_height - card_y) / num_selections;
+    let selector_offset =
+      (selector_box_height - selector_box_y) / num_selections;
 
     for (let i = 0; i < num_selections; i++) {
       this.selector_array[i] = new Selector(
         0,
-        card_y +
+        selector_box_y +
           i * selector_offset +
           0 +
           selector_offset / 2.0 -
@@ -43,6 +57,17 @@ class SelectorManager {
     this.selector_array[3].set_currently_selected(false);
     this.selector_array[4].set_selector_title("Rhythm");
     this.selector_array[4].set_currently_selected(false);
+    */
+  }
+
+  draw() {
+    fill(color(255, 0, 0));
+    rect(
+      this.selector_box_x,
+      this.selector_box_y,
+      this.selector_box_width,
+      this.selector_box_height
+    );
   }
 
   get_selector_array() {

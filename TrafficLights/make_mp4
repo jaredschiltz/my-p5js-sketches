@@ -1,0 +1,1 @@
+ffmpeg -r 3 -i "frame%04d.png" -i signature.png -filter_complex "[0:v][1:v] overlay=0:0" -pix_fmt yuv420p -movflags +faststart perfectloop.mp4
