@@ -48,7 +48,9 @@ const CARD_DIMENSIONS = {
   CARD_HEIGHT: 615,
 };
 
-const border_height_percentage = 0.25; // This is how thick border strip should be w.r.t. to card height
+// This is how thick border strip should be w.r.t. to card height
+// The borders are the graphical areas (top and bottom) of the card
+const border_height_percentage = 0.25;
 let border1;
 
 let noun_strings;
