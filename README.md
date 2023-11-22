@@ -9,5 +9,5 @@ Browser sync automatically reloads page when code has been modified! Nice!
 1. Install node.js
 2. npm install -g browser-sync
 3. run server by going to folder that has the files you want to server and typing
-   browser-sync start --server -f "_.html, _.js"
+   browser-sync start --server -f "*.html, *.js"
 4. point browser to http://localhost:3000
