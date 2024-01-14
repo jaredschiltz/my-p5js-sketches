@@ -1,8 +1,11 @@
 /*
   Creates a sprite-sheet (image) using text emoji characters
+  The background of the sprite-sheet is transparent
 */
 let fruit_list;
 let cnv;
+let fruit_sprite_sheet_image
+
 function setup() {
   cnv = createCanvas(800, 800);
   fruit_list = [
@@ -22,11 +25,13 @@ function setup() {
     "🍓",
     "🥝",
   ];
+  fruit_sprite_sheet_image = createImage(cnv.width,cnv.height)
   noLoop();
+  
 }
 
 function draw() {
-  background(0);
+  background(0,0,0,0);
   rectMode(CENTER);
   textAlign(CENTER, CENTER);
   stroke(0);
@@ -50,12 +55,21 @@ function draw() {
       fruit_index = (fruit_index + 1) % fruit_list.length;
     }
   }
+  fruit_sprite_sheet_image.copy(
+    cnv,
+    0,
+    0,
+    cnv.width,
+    cnv.height,
+    0,
+    0,
+    cnv.width,
+    cnv.height
+  );
 }
 
 function keyPressed() {
   if (key == "s") {
-    // Couldn't find a way to make saveCanvas output image with transparent background
-    // TODO: Figure this out if you have extra time (LOL)
-    saveCanvas("fruit-sprite-sheet", "jpg");
+   fruit_sprite_sheet_image.save('fruit-sprite-sheet','png')
   }
 }
