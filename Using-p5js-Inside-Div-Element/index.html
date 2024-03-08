@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Using p5js Inside of HTML Div</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/addons/p5.sound.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+
+  </head>
+  <body>
+    <script src="sketch.js"></script>
+    <h1 style="color:white; text-align:center">Demonstrates DOM and p5 Interaction</h1>
+    </div>  
+    <div id="Canvas" 
+    onmousedown="console.log('mouse down')"
+    onmouseup="console.log('mouse up')"
+    style="width:800px; height:500px; margin:auto"
+    ></div>
+    <table style="color:black; background-color:white; margin-left: auto; margin-right: auto;
+    width:800px; height:100px; margin:auto">
+      <th onclick="draw_red()">Draw Red</th>
+      <th onclick="draw_green()">Draw Green</th>
+      <th onclick="draw_blue()">Draw Blue</th>
+    </table>
+  </body>
+</html>
