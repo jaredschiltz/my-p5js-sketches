@@ -34,7 +34,7 @@ function mouseDragged() {
 }
 
 function draw() {
-  //Engine.update(engine)
+  Engine.update(engine);
   background(220);
   for (let bounds of boundaries) {
     bounds.show();
