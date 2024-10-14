@@ -45,5 +45,5 @@ function draw() {
   //image(purple_light, light_two[0].x, light_two[0].y);
   //image(cyan_light, light_two[1].x, light_two[1].y);
   image(violet_light, light_two[2].x, light_two[2].y);
-  saveCanvas(c, "frame0003", "png");
+  //saveCanvas(c, "frame0003", "png");
 }
