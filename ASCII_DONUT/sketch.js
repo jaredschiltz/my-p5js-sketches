@@ -15,17 +15,13 @@ let pixel_offset;
 let my_font;
 
 function preload() {
-  my_font = loadFont("C64_Pro_Mono-STYLE.ttf");
+  my_font = loadFont("./assets/C64_Pro_Mono-STYLE.ttf");
 }
 
 function setup() {
   createCanvas(800, 800);
   // specify multiple formats for different browsers
-  donut = createVideo(["assets/Donut.mov"]);
-  donut.autoplay();
-  donut.loop();
-  donut.hide();
-  donut.size(width, height);
+  donut = createVideo("./assets/Donut.mov", handleVideo);
   noStroke();
   fill(0);
   pixel_offset = width / pixel_size;
@@ -33,6 +29,20 @@ function setup() {
   textFont(my_font);
   textSize(pixel_size);
   textAlign(CENTER);
+}
+
+function handleVideo() {
+  donut.size(width, height);
+  donut.autoplay(false);
+}
+
+/* NOTE! Must press the mouse to start the video playing!!!!
+Can't do an auto load in Chrome brower, because security policy restricts it.
+*/
+function mousePressed() {
+  donut.loop();
+  donut.hide();
+  donut.play();
 }
 
 function draw() {
