@@ -13,6 +13,8 @@ Output needs to look like this:
 directories = [f for f in os.listdir() if os.path.isdir(f)]
 for dirs in directories:
     replace_dash_with_space = re.sub("-", " ", dirs)
-    print(
-        f'<li><a href="https://jaredschiltz.github.io/my-p5js-sketches/{dirs}/index.html">{replace_dash_with_space}</a></li>'
-    )
+    ignore_directories = [".git"]
+    if dirs not in ignore_directories:
+        print(
+            f'<li><a href="https://jaredschiltz.github.io/my-p5js-sketches/{dirs}/index.html">{replace_dash_with_space}</a></li>'
+        )
