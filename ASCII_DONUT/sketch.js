@@ -6,6 +6,7 @@
  * <a href="https://github.com/processing/p5.js/wiki/Local-server">local server</a>.
  */
 let donut;
+let start_donut_draw = false;
 
 //const density = ".,-~:;=!*#$@";
 const density = "Û◤▞Åã╭:,.";
@@ -43,6 +44,9 @@ function mousePressed() {
   donut.loop();
   donut.hide();
   donut.play();
+  // Do not allow draw loop to try and draw donut without the lines above
+  // setting up the donut video and playing it first!
+  start_donut_draw = true;
 }
 
 function draw() {
@@ -60,15 +64,17 @@ function draw() {
     }
   }
   */
-  donut.loadPixels();
-  for (let y = pixel_size / 2; y < donut.height; y = y + pixel_size) {
-    for (let x = pixel_size / 2; x < donut.width; x = x + pixel_size) {
-      const pixelIndex = (x + y * donut.width) * 4;
-      const r = donut.pixels[pixelIndex + 0];
-      const g = donut.pixels[pixelIndex + 1];
-      const b = donut.pixels[pixelIndex + 2];
-      let bright = brightness(color(r, g, b));
-      /*
+
+  if (start_donut_draw == true) {
+    donut.loadPixels();
+    for (let y = pixel_size / 2; y < donut.height; y = y + pixel_size) {
+      for (let x = pixel_size / 2; x < donut.width; x = x + pixel_size) {
+        const pixelIndex = (x + y * donut.width) * 4;
+        const r = donut.pixels[pixelIndex + 0];
+        const g = donut.pixels[pixelIndex + 1];
+        const b = donut.pixels[pixelIndex + 2];
+        let bright = brightness(color(r, g, b));
+        /*
       if (bright > max_bright) {
         max_bright = bright;
       }
@@ -76,11 +82,12 @@ function draw() {
         min_bright = bright;
       }
       */
-      let char_index = floor(map(bright, 1, 225, 0, density.length));
-      let c = density.charAt(char_index);
-      fill(color(r + 150, g + 74, b + 0));
-      text(c, x, y + pixel_size / 2.25);
-      //rect(x, y, pixel_size, pixel_size);
+        let char_index = floor(map(bright, 1, 225, 0, density.length));
+        let c = density.charAt(char_index);
+        fill(color(r + 150, g + 74, b + 0));
+        text(c, x, y + pixel_size / 2.25);
+        //rect(x, y, pixel_size, pixel_size);
+      }
     }
   }
 }
