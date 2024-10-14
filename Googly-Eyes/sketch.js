@@ -2,85 +2,50 @@
 
 let img;
 
-let faceapi;
+let faceMesh;
+let options = { maxFaces: 2, refineLandmarks: false, flipHorizontal: false };
 let detections;
+let got_eyes = false;
 
 let eyes;
 const EYE_SIZE = 41;
 const PUPIL_FRACTION = 0.6;
 const PUPIL_SIZE = EYE_SIZE * PUPIL_FRACTION;
 
-// by default all options are set to true
-const detectionOptions = {
-  withLandmarks: true,
-  withDescriptors: false,
-};
-
 function preload() {
   img = loadImage("img_old.jpg");
   eyes = new Array();
-  faceapi = ml5.faceApi(detectionOptions, modelReady);
-}
-
-function modelReady() {
-  console.log("ready!");
-  console.log(faceapi);
-  faceapi.detect(img, gotResults);
-}
-
-function gotResults(err, result) {
-  if (err) {
-    console.log(err);
-    return;
-  }
-
-  detections = result;
-
-  // Have to do the processing logic in here, because this is the only
-  // place where detection operation is deemed to be completed
-  for (let d of detections) {
-    let x_right_eye_avg = 0;
-    let y_right_eye_avg = 0;
-    for (let i = 0; i < d.parts.rightEye.length; i++) {
-      x_right_eye_avg += d.parts.rightEye[i].x;
-    }
-    x_right_eye_avg /= d.parts.rightEye.length;
-    for (let i = 0; i < d.parts.rightEye.length; i++) {
-      y_right_eye_avg += d.parts.rightEye[i].y;
-    }
-    y_right_eye_avg /= d.parts.rightEye.length;
-
-    let x_left_eye_avg = 0;
-    let y_left_eye_avg = 0;
-    for (let i = 0; i < d.parts.leftEye.length; i++) {
-      x_left_eye_avg += d.parts.leftEye[i].x;
-    }
-    x_left_eye_avg /= d.parts.leftEye.length;
-    for (let i = 0; i < d.parts.leftEye.length; i++) {
-      y_left_eye_avg += d.parts.leftEye[i].y;
-    }
-    y_left_eye_avg /= d.parts.leftEye.length;
-
-    eyes.push({
-      right_eye: {
-        x: x_right_eye_avg,
-        y: y_right_eye_avg,
-        rotation_amount: random(0, TWO_PI),
-        rotation_direction: int(random(0, 2)),
-      },
-      left_eye: {
-        x: x_left_eye_avg,
-        y: y_left_eye_avg,
-        rotation_amount: random(0, TWO_PI),
-        rotation_direction: int(random(0, 2)),
-      },
-    });
-  }
-  print(eyes);
+  faceMesh = ml5.faceMesh(options);
 }
 
 function setup() {
   createCanvas(1000, 927);
+  image(img, 0, 0);
+  faceMesh.detectStart(img, gotFaces);
+}
+
+function gotFaces(results, error) {
+  if (got_eyes == false) {
+    detections = results;
+    for (let d of detections) {
+      eyes.push({
+        right_eye: {
+          x: d.rightEye.centerX,
+          y: d.rightEye.centerY,
+          rotation_amount: random(0, TWO_PI),
+          rotation_direction: int(random(0, 2)),
+        },
+        left_eye: {
+          x: d.leftEye.centerX,
+          y: d.leftEye.centerY,
+          rotation_amount: random(0, TWO_PI),
+          rotation_direction: int(random(0, 2)),
+        },
+      });
+    }
+    got_eyes = true;
+    //print(eyes);
+  }
 }
 
 function draw() {
