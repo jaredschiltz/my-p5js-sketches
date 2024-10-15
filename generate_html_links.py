@@ -11,7 +11,8 @@ Output needs to look like this:
 """
 
 directories = [f for f in os.listdir() if os.path.isdir(f)]
-for dirs in directories:
+
+for dirs in sorted(directories):
     replace_dash_with_space = re.sub("-", " ", dirs)
     ignore_directories = [".git"]
     if dirs not in ignore_directories:
