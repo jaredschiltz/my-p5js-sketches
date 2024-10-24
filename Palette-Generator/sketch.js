@@ -75,6 +75,8 @@ function keyPressed() {
     writeFile([gd.ase.encode(colors)], gd.timestamp(), "ase");
   }
 
+  // The three arrays are filled with random values. This means
+  // any color can appear in the palette.
   if (key == "1") {
     for (var i = 0; i < tileCountX; i++) {
       hueValues[i] = random(360);
@@ -83,6 +85,8 @@ function keyPressed() {
     }
   }
 
+  // Brightness fixed at 100.
+  // The result is a palette dominated by bright colors
   if (key == "2") {
     for (var i = 0; i < tileCountX; i++) {
       hueValues[i] = random(360);
@@ -91,6 +95,8 @@ function keyPressed() {
     }
   }
 
+  // Saturation fixed at 100.
+  // The result is a palette with no pastel tones
   if (key == "3") {
     for (var i = 0; i < tileCountX; i++) {
       hueValues[i] = random(360);
@@ -99,6 +105,7 @@ function keyPressed() {
     }
   }
 
+  // Palette is just colors from black to white, through shades of grey
   if (key == "4") {
     for (var i = 0; i < tileCountX; i++) {
       hueValues[i] = 0;
@@ -107,6 +114,7 @@ function keyPressed() {
     }
   }
 
+  // Palette of dark blues
   if (key == "5") {
     for (var i = 0; i < tileCountX; i++) {
       hueValues[i] = 195;
@@ -115,6 +123,7 @@ function keyPressed() {
     }
   }
 
+  // Palette of light blues
   if (key == "6") {
     for (var i = 0; i < tileCountX; i++) {
       hueValues[i] = 195;
@@ -123,6 +132,8 @@ function keyPressed() {
     }
   }
 
+  // The hues are only selected from first half of color wheel.
+  // Resulting in a palette of warm colors
   if (key == "7") {
     for (var i = 0; i < tileCountX; i++) {
       hueValues[i] = random(180);
@@ -131,6 +142,8 @@ function keyPressed() {
     }
   }
 
+  // The hues are only selected from second half of color wheel.
+  // Resulting in a palette of cool colors
   if (key == "8") {
     for (var i = 0; i < tileCountX; i++) {
       hueValues[i] = random(180, 360);
@@ -139,13 +152,16 @@ function keyPressed() {
     }
   }
 
+  // Mix of two color palettes
   if (key == "9") {
     for (var i = 0; i < tileCountX; i++) {
       if (i % 2 == 0) {
+        // Darker, more saturated color saved in the array
         hueValues[i] = random(360);
         saturationValues[i] = 100;
         brightnessValues[i] = random(100);
       } else {
+        // Produce bright blue tones
         hueValues[i] = 195;
         saturationValues[i] = random(100);
         brightnessValues[i] = 100;
@@ -153,6 +169,7 @@ function keyPressed() {
     }
   }
 
+  // Palette of blues and greens
   if (key == "0") {
     for (var i = 0; i < tileCountX; i++) {
       if (i % 2 == 0) {
