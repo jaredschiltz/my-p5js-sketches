@@ -1457,6 +1457,30 @@ const pico8 = [
     stroke: "#000000",
   },
 ];
+/*
+const rave_palette_book = [
+  {
+    name: "#1",
+    colors: ["", "", "", ""],
+    stroke: "#000",
+    background: "#fff",
+  },
+];
+*/
+const neon = [
+  {
+    name: "Neon #1",
+    colors: ["#640D5F", "#D91656", "#EE66A6", "#FFEB55"],
+    stroke: "#000",
+    background: "#fff",
+  },
+  {
+    name: "Neon #2",
+    colors: ["#D2FF72", "#73EC8B", "#54C392", "#15B392"],
+    stroke: "#000",
+    background: "#fff",
+  },
+];
 
 /* Complete Palette List */
 const all_palettes = [
@@ -1482,6 +1506,7 @@ const all_palettes = [
   flourish,
   picotron,
   pico8,
+  neon,
 ];
 
 // This sets up the width, height, padding for each color palette block
