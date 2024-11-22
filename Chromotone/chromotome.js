@@ -1474,9 +1474,24 @@ const neon = [
     stroke: "#000",
     background: "#fff",
   },
+];
+
+const vaporwave = [
   {
-    name: "Neon #2",
-    colors: ["#D2FF72", "#73EC8B", "#54C392", "#15B392"],
+    name: "Vaporwave #1",
+    colors: ["#F569C4", "#03CAFC", "#06FC9E", "#B768FC", "#FFFB8D"],
+    stroke: "#000",
+    background: "#fff",
+  },
+  {
+    name: "Vaporwave #2",
+    colors: ["#FF06C1", "#8705E4", "#4605EC", "#11B4F5", "#0DFDF9"],
+    stroke: "#000",
+    background: "#fff",
+  },
+  {
+    name: "Vaporwave #3",
+    colors: ["#F52E97", "#94157F", "#300350", "#F9AB53", "#E93479"],
     stroke: "#000",
     background: "#fff",
   },
@@ -1507,6 +1522,7 @@ const all_palettes = [
   picotron,
   pico8,
   neon,
+  vaporwave,
 ];
 
 // This sets up the width, height, padding for each color palette block
