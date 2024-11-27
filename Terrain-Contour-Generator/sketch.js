@@ -1,3 +1,4 @@
+"use strict";
 const WIDTH_HEIGHT = 800;
 // https://github.com/blindman67/SimplexNoiseJS
 //  just using different random seeds - not a gif loop
@@ -9,7 +10,7 @@ let rez;
 let xoff = 0;
 let yoff = 0;
 let cols, rows;
-const NUMBER_CELLS_PER_WIDTH_HEIGHT = 30;
+const NUMBER_CELLS_PER_WIDTH_HEIGHT = 100;
 
 let contour_points = [];
 
@@ -21,11 +22,12 @@ function setup() {
   cols = NUMBER_CELLS_PER_WIDTH_HEIGHT;
   rows = NUMBER_CELLS_PER_WIDTH_HEIGHT;
   rez = width / NUMBER_CELLS_PER_WIDTH_HEIGHT;
+  paper.setup();
   noLoop();
 }
 
 function draw() {
-  background(0);
+  background(255);
   xoff = 0;
   for (let i = 0; i <= rows; i++) {
     xoff += inc;
@@ -39,16 +41,44 @@ function draw() {
   for (let i = 0; i <= rows; i++) {
     for (let j = 0; j <= cols; j++) {
       let noise_value = field[i][j];
-      stroke(noise_value * 255, noise_value * 255, noise_value * 255);
-      strokeWeight(rez * 0.4);
-      point(j * rez, i * rez);
-      compute_contours(i, j, 0.7, color(255, 255, 0));
+      // Draw Noise Field
+      // stroke(noise_value * 255, noise_value * 255, noise_value * 255);
+      // strokeWeight(rez * 0.4);
+      // point(j * rez, i * rez);
+      compute_contours(i, j, 0.5);
       //compute_contours(i, j, 0.6, color(255, 0, 0));
     }
   }
 
   zoff += 0.05;
-  make_contour_chains();
+  let chains = make_contour_chains();
+  // Use paper.js to draw smoothed path of all contours
+
+  strokeWeight(3);
+  stroke(0);
+
+  let path;
+  for (let chain = 0; chain < chains.length; chain++) {
+    path = new paper.Path({
+      segments: chains[chain].map((element) => {
+        return [element.x, element.y];
+      }),
+      strokeColor: "black",
+      closed: false,
+    });
+    //path.smooth({ type: "continuous" });
+    path.simplify(1);
+    let num_points = 5000;
+    let { x: x0, y: y0 } = path.getPointAt(0);
+    for (let i = 0; i < num_points; i++) {
+      // Find location of each point along the entire curve
+      let offset = map(i, 0, num_points - 1, 0, path.length);
+      let { x, y } = path.getPointAt(offset);
+      line(x0, y0, x, y);
+      x0 = x;
+      y0 = y;
+    }
+  }
 }
 
 function keyPressed() {
@@ -59,7 +89,7 @@ function keyPressed() {
   }
 }
 
-function compute_contours(i, j, threshold, stroke_colour) {
+function compute_contours(i, j, threshold, draw = false) {
   // Square Indices To Bit Value
   //  3 ______ 2
   //  |        |
@@ -80,7 +110,7 @@ function compute_contours(i, j, threshold, stroke_colour) {
 
     //Draw
     strokeWeight(rez * 0.1);
-    stroke(stroke_colour);
+    stroke(255, 0, 255);
     let x1;
     let y1;
     let x2;
@@ -116,7 +146,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           y2: y2,
         });
 
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 2:
@@ -137,8 +169,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 3:
@@ -160,7 +193,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           y2: y2,
         });
 
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 4:
@@ -181,8 +216,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 5:
@@ -203,8 +239,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
 
         x2 = floor(j * rez + rez / 2);
         y2 = floor(i * rez + rez);
@@ -217,8 +254,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 6:
@@ -239,8 +277,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 7:
@@ -261,7 +300,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 8:
@@ -282,7 +323,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 9:
@@ -304,7 +347,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           y2: y2,
         });
 
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 10:
@@ -325,8 +370,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
 
         x2 = floor(j * rez);
         y2 = floor(i * rez + rez / 2);
@@ -339,8 +385,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 11:
@@ -361,8 +408,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 12:
@@ -383,7 +431,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 13:
@@ -404,8 +454,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 14:
@@ -426,8 +477,9 @@ function compute_contours(i, j, threshold, stroke_colour) {
           x2: x2,
           y2: y2,
         });
-
-        line(x1, y1, x2, y2);
+        if (draw) {
+          line(x1, y1, x2, y2);
+        }
         break;
 
       case 15:
@@ -512,6 +564,7 @@ function make_contour_chains() {
   // However, all of the chains that are complete rings; i.e., don't go offscreen,
   // have duplicate points at the start and end
   // Remove duplicates
+  /*
   for (let chain = 0; chain < chains.length; chain++) {
     if (
       chains[chain][0].x === chains[chain][chains[chain].length - 1].x &&
@@ -520,8 +573,10 @@ function make_contour_chains() {
       chains[chain].pop();
     }
   }
+    */
 
   // Draw the chains
+  /*
   for (let chain = 0; chain < chains.length; chain++) {
     for (
       let point_index = 0;
@@ -538,4 +593,6 @@ function make_contour_chains() {
       point(chains[chain][point_index].x, chains[chain][point_index].y);
     }
   }
+    */
+  return chains;
 }
