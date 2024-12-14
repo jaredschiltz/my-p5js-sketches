@@ -32,7 +32,7 @@ new p5(function (p5) {
     // if we are not animating; i.e., noNoop()
     let xoff = 0;
     let yoff = 0;
-    let inc = 0.04;
+    let inc = 0.03;
     let zoff = 0;
 
     const WIDTH_HEIGHT_RESOLUTION = p5.width / NUMBER_CELLS_PER_WIDTH;
@@ -76,11 +76,11 @@ new p5(function (p5) {
     }
     */
 
-    let number_of_contours = 1;
+    let number_of_contours = 7;
     for (let i = 0; i < number_of_contours; i++) {
       // Compute Contours
-      //let contour_threshold = p5.map(i, 0, number_of_contours - 1, 0.3, 0.6);
-      let contour_threshold = 0.5;
+      let contour_threshold = p5.map(i, 0, number_of_contours - 1, 0.2, 0.7);
+      //let contour_threshold = 0.5;
       let contour_points = compute_contours(
         p5,
         NUMBER_CELLS_PER_HEIGHT,
@@ -118,7 +118,7 @@ new p5(function (p5) {
         //path.smooth({ type: "continuous" });
         path.simplify(1);
 
-        p5.strokeWeight(1);
+        p5.strokeWeight(2);
         // Draw all smoothed contours
         let num_points = 500;
         let { x: x0, y: y0 } = path.getPointAt(0);
