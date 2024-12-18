@@ -1,5 +1,6 @@
 const WIDTH_HEIGHT = 800;
 const NUM_TRIANGLE_WIDTHS_ACROSS = 6; // widths are equal to length of equilateral triangle
+const NUM_OF_TILES_TO_SWAP = 20;
 // equilateral triangle has a height that is sqrt(3)/2 * width
 const height_to_width_ratio = Math.sqrt(3) / 2.0;
 let my_image;
@@ -30,7 +31,9 @@ function draw() {
     width,
     height
   );
-  //image(my_image_resize_to_canvas, 0, 0, 800, 800);
+  // Draw image before tile mixup as background. This hides the
+  // seams created by the tiles when they are mixed up.
+  image(my_image_resize_to_canvas, 0, 0, 800, 800);
   let triangle_base = parseInt(width / NUM_TRIANGLE_WIDTHS_ACROSS);
   let triangle_height = parseInt(triangle_base * height_to_width_ratio);
   mask_triangle_upright = createGraphics(triangle_base, triangle_height);
@@ -92,25 +95,6 @@ function draw() {
     mask_triangle_upside_down.height
   );
 
-  /*
-  let image_to_be_masked = createImage(
-    parseInt(mask_triangle_upright.width),
-    parseInt(mask_triangle_upright.height)
-  );
-  image_to_be_masked.copy(
-    my_image_resize_to_canvas,
-    my_image_resize_to_canvas.width / 2,
-    my_image_resize_to_canvas.height / 2,
-    parseInt(mask_triangle_upright.width),
-    parseInt(mask_triangle_upright.height),
-    0,
-    0,
-    parseInt(mask_triangle_upright.width),
-    parseInt(mask_triangle_upright.height)
-  );
-  image_to_be_masked.mask(mask_triangle_upright_image);
-  image(image_to_be_masked, 0, 0);
-  */
   let grid = make_triangle_grid(
     triangle_base,
     triangle_height,
@@ -118,7 +102,8 @@ function draw() {
     mask_triangle_upright_image,
     mask_triangle_upside_down_image
   );
-  //image(my_image_resize_to_canvas, 0, 0);
+
+  randomized_tile_swapping(grid, NUM_OF_TILES_TO_SWAP);
 
   // display grid
   for (let img of grid) {
@@ -220,4 +205,40 @@ function make_triangle_grid(
     }
   }
   return grid;
+}
+
+function randomized_tile_swapping(grid, number_of_tiles_to_swap) {
+  for (let i = 0; i < number_of_tiles_to_swap; i++) {
+    let orientation = null;
+    if (floor(random(2)) === 1) {
+      // swap upright triangle
+      orientation = 1;
+    } else {
+      // swap upside down triangle
+      orientation = 0;
+    }
+
+    let filtered_grid = null;
+    if (orientation === 1) {
+      filtered_grid = grid.filter((tile) => {
+        return tile.orientation === 1;
+      });
+    } else {
+      filtered_grid = grid.filter((tile) => {
+        return tile.orientation === 0;
+      });
+    }
+
+    let first_tile_select = floor(random(filtered_grid.length));
+    let second_tile_select = null;
+    while (second_tile_select === null) {
+      // Pick a different tile from first
+      second_tile_select = floor(random(filtered_grid.length));
+    }
+    // Perform tile swap
+    let image_of_first_tile = filtered_grid[first_tile_select].masked_image;
+    let image_of_second_tile = filtered_grid[second_tile_select].masked_image;
+    filtered_grid[first_tile_select].masked_image = image_of_second_tile;
+    filtered_grid[second_tile_select].masked_image = image_of_first_tile;
+  }
 }
