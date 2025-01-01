@@ -31,7 +31,7 @@ function mousePressed() {
 }
 
 function draw() {
-  background(255);
+  background(0);
   fill(BACKGROUND_COLOR);
   noStroke();
   rect(
@@ -103,7 +103,7 @@ function draw() {
     WIDTH_HEIGHT - 2 * border_size
   );
   noStroke();
-  fill(0);
+  fill(255);
   textSize(12);
   textFont("Playwrite CU");
   text(">> 25.1", border_size, WIDTH_HEIGHT - 40);
