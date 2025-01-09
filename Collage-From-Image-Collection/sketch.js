@@ -80,20 +80,6 @@ function draw() {
     );
     pop();
   }
-
-  /*
-  noFill();
-  stroke(255, 255, 255);
-  translate(width / 2 - 400, height / 2);
-  ellipse(0, 0, 30, 30);
-  rotate(0.85);
-  scale(0.8);
-  image(
-    layer_3_array[4],
-    -layer_3_array[4].width / 2,
-    -layer_3_array[4].height / 2
-  );
-  */
 }
 
 function keyPressed() {
