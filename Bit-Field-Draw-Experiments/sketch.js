@@ -1,15 +1,24 @@
 const WIDTH_HEIGHT = 800;
-let color_array;
+let color_array = [
+  "#000000",
+  "#8CEEEE",
+  "#26BFBF",
+  "#FF8A47",
+  "#FC6170",
+  "#FFD747",
+];
 let ZERO_COLOR;
 let ONE_COLOR;
 let NUMBER_OF_CELLS_PER_ROW;
 
 function setup() {
   createCanvas(WIDTH_HEIGHT, WIDTH_HEIGHT);
+  /*
   color_array = new Array(20);
   for (let c = 0; c < color_array.length; c++) {
     color_array[c] = color(random(0, 255), random(0, 255), random(0, 255));
   }
+    */
 
   NUMBER_OF_CELLS_PER_ROW = 200;
   noStroke();
@@ -48,7 +57,7 @@ function draw_xor_rug() {
           break;
 
         default:
-          fill(color_array[19]);
+          fill(color_array[0]);
       }
       /*
       if (bit_field_function(cols, rows) == 0) {
@@ -64,9 +73,9 @@ function draw_xor_rug() {
 
 function keyPressed() {
   if (key == "s") {
-    //saveCanvas("output", "jpg");
+    saveCanvas("output", "jpg");
     //image.save("image_mask", "png"); // This saves a transparent mask png file
-    saveGif("output_gif", 10);
+    //saveGif("output_gif", 10);
   }
 }
 
@@ -89,9 +98,15 @@ function bit_field_function(x, y) {
   return value(x, y);
 }
 
-function mousePressed() {
-  for (let c = 0; c < color_array.length; c++) {
-    color_array[c] = color(random(0, 255), random(0, 255), random(0, 255));
+const shuffle = (array) => {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
   }
+  return array;
+};
+
+function mousePressed() {
+  color_array = shuffle(color_array);
   draw_xor_rug();
 }
