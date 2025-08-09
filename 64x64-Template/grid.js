@@ -193,6 +193,34 @@ class Grid {
       this.draw_horizontal_line(start.x, start.x + size.x, y, colour);
     }
   }
+
+  // This draw a any pattern, using a 16 bit hex number
+  // The 16 bit number maps to 4x4 cells as following:
+  /*
+    bit 0  bit 1  bit 2  bit 3
+    bit 4  bit 5  bit 6  bit 7
+    bit 8  bit 9  bit 10 bit 11
+    bit 12 bit 13 bit 14 bit 15
+  */
+  draw_rect_filled_pattern(
+    start,
+    size,
+    pattern = 0xffff,
+    colour1 = color("#ffffff"),
+    colour2 = undefined
+  ) {
+    for (let row = start.y; row < start.y + size.y + 1; row++) {
+      for (let col = start.x; col < start.x + size.x + 1; col++) {
+        let bit = ((row - start.y) % 4) * 4 + ((col - start.x) % 4);
+        if ((pattern & (1 << bit)) !== 0) {
+          this.set_pixel(createVector(col, row), colour1);
+        } else {
+          if (colour2 !== undefined)
+            this.set_pixel(createVector(col, row), colour2);
+        }
+      }
+    }
+  }
   // TODO
   // Things to implement:
   /*

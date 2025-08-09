@@ -39,6 +39,13 @@ function draw() {
     color(255, 255, 255)
   );
 
+  grid.draw_rect_filled_pattern(
+    createVector(6, 6),
+    createVector(20, 10),
+    0x8520,
+    color(255, 0, 255)
+  );
+
   grid.show();
 }
 
