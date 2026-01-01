@@ -106,7 +106,7 @@ function draw() {
   fill("#000000");
   textSize(12);
   textFont(my_font);
-  text(">> 26.13", 35, 785);
+  text(">> 26.14", 35, 785);
 }
 function keyPressed() {
   if (key == "s" || key == "S") {
