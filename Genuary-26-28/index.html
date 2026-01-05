@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Genuary 26 28</title>
+    <!-- No libraries, no canvas, only HTML elements-->
+  <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        background: #111;
+        color: #eee;
+        font-family: monospace;
+        overflow: hidden;
+      }
+
+      #field {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 16px);
+        grid-auto-rows: 16px;
+        width: 100vw;
+        height: 100vh;
+        line-height: 16px;
+        user-select: none;
+      }
+
+      .cell {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 1.5s ease, color 1.5s ease;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+<div id="field"></div>
+
+<script>
+  const field = document.getElementById('field');
+  const cellSize = 16;
+
+  const cols = Math.floor(window.innerWidth / cellSize);
+  const rows = Math.floor(window.innerHeight / cellSize);
+
+  const arrows = ['↑', '→', '↓', '←'];
+
+  // Create grid
+  for (let i = 0; i < cols * rows; i++) {
+    const span = document.createElement('span');
+    span.className = 'cell';
+    span.textContent = arrows[Math.floor(Math.random() * arrows.length)];
+    field.appendChild(span);
+  }
+
+  const cells = Array.from(document.querySelectorAll('.cell'));
+
+  function step() {
+    cells.forEach((cell, i) => {
+      // Simple pseudo-flow: neighbor influence
+      const left = cells[i - 1];
+      const up   = cells[i - cols];
+
+      let dir = Math.floor(Math.random() * 4);
+
+      if (left && Math.random() < 0.6) {
+        dir = arrows.indexOf(left.textContent);
+      }
+      if (up && Math.random() < 0.6) {
+        dir = arrows.indexOf(up.textContent);
+      }
+
+      cell.textContent = arrows[dir];
+      cell.style.transform = `rotate(${dir * 90}deg)`;
+      cell.style.color = `hsl(${dir * 90 + Math.random() * 40}, 70%, 60%)`;
+    });
+  }
+
+  setInterval(step, 1500);
+</script>
+
