@@ -53,6 +53,22 @@ function draw() {
 
   push();
   translate(start_pos + cell_width * 10, start_pos + cell_width * 12);
+  noStroke();
+  fill("#ffffff");
+  rect(0, 0, cell_width, cell_width);
+  push();
+  translate(cell_width / 2, cell_width / 2);
+  rotate(PI / 4);
+  // Draw a screwed up circle - aka, an ellipse
+  ellipseMode(CENTER);
+  noFill();
+  stroke("#000000");
+  ellipse(0, 0, 20, 40);
+  pop();
+
+  // This draws a speckled square of pink and green
+  // Decided this doesn't look very good
+  /*
   for (let row = 0; row < cell_width; row = row + 2) {
     for (let col = 0; col < cell_width; col = col + 2) {
       let color_array = [color("#ff13f0"), color("#00ff00")];
@@ -61,6 +77,7 @@ function draw() {
       rect(row, col, 1, 1);
     }
   }
+    */
   stroke("#000000");
   noFill();
   rect(0, 0, cell_width, cell_width);
