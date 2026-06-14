@@ -1,6 +1,5 @@
 const WIDTH_HEIGHT = 800;
 
-function preload() {}
 
 function setup() {
   createCanvas(WIDTH_HEIGHT, WIDTH_HEIGHT);
